@@ -9,6 +9,8 @@ public enum TipoHabitacion {
         this.costoPorNoche = costo;
     }
 
+    //Este método permite se llamado desde otras clases para poder hacer los cálculos sobre
+    //el precio total de la estadía en cada habitación según su tipo.
     public double getCostoPorNoche() {
         return costoPorNoche;
     }
