@@ -18,6 +18,7 @@ public class Habitacion {
         this.huespedes = new ArrayList<Huesped>();
     }
 
+
     public String verEstadoHabitacion() {
         if (huespedes.isEmpty()) {
             return "Habitación disponible";
