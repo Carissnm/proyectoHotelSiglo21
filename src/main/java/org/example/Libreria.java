@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -52,6 +53,24 @@ public class Libreria {
             e.printStackTrace();
         }
         return date;
+    }
+
+    private static SimpleDateFormat date = new SimpleDateFormat("dd-MM-yy");
+    public static String calcularDias(String fecha, int cantidadDias){
+        String dateBefore = fecha;
+
+        Calendar cal = Calendar.getInstance();
+
+        try{
+            cal.setTime(date.parse(dateBefore));
+        } catch (ParseException e) {
+            e.printStackTrace(); // de esta manera en caso de no poder realizarse la conversión de String a Date entonces arroja un error y se evita que el programa se cierre.
+        }
+
+        cal.add(Calendar.DAY_OF_MONTH, cantidadDias);
+        String dateAfter = date.format(cal.getTime());
+
+        return dateAfter;
     }
 
     }

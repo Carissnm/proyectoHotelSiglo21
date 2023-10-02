@@ -25,22 +25,39 @@ public class Habitacion {
         this.huespedes = new ArrayList<Huesped>();
     }
 
-
-    public String verEstadoHabitacion() {
-        if (huespedes.isEmpty()) {
-            return "Habitación disponible";
-        } else {
-            return "Habitación reservada";
-        }
+    public TipoHabitacion getTipoHabitacion() {
+        return tipoHabitacion;
     }
+
+    /* El siguiente método permite verificar si una habitación
+    tiene o no huéspedes para poder luego ser utilizado por el
+     Hotel cuando realiza las cotizaciones y consultas de
+     habitaciones disponibles */
+    public Boolean verEstadoHabitacion() {
+        return huespedes.isEmpty();
+    }
+
+    public void agregarHuespedes(ArrayList<Huesped> huespedes){
+        this.huespedes.addAll(huespedes);
+    }
+
+
+    // Este método permite eliminar todos los huéspedes de la lista de la habitación. Es utilizado por el método
+    //de cancelar reserva de la clase hotel.
+    public void eliminarHuespedes(){
+        this.huespedes.clear();
+    }
+
+    public void actualizarEstadoHabitacion(boolean estado){
+        this.isReservada = estado;
+    }
+
+
     @Override
     public String toString() {
-        return "Habitacion{" +
-                "nroHabitacion=" + nroHabitacion +
-                ", isReservada=" + isReservada +
-                ", tipoHabitacion=" + tipoHabitacion +
-                ", costoPorNoche=" + costoPorNoche +
-                ", huespedes=" + huespedes +
-                '}';
+        return "Habitacion: \n" +
+                "Número:" + nroHabitacion +
+                "\nTipo:" + tipoHabitacion +
+                "\nValor por noche: " + costoPorNoche;
     }
 }
