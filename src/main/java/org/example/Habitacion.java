@@ -29,10 +29,14 @@ public class Habitacion {
         return tipoHabitacion;
     }
 
+    public ArrayList<Huesped> getHuespedes() {
+        return huespedes;
+    }
+
     /* El siguiente método permite verificar si una habitación
-    tiene o no huéspedes para poder luego ser utilizado por el
-     Hotel cuando realiza las cotizaciones y consultas de
-     habitaciones disponibles */
+        tiene o no huéspedes para poder luego ser utilizado por el
+         Hotel cuando realiza las cotizaciones y consultas de
+         habitaciones disponibles */
     public Boolean verEstadoHabitacion() {
         return huespedes.isEmpty();
     }

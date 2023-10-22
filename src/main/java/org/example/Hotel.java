@@ -28,6 +28,8 @@ public class Hotel {
 
         return random_nro;
     }
+
+
     private ArrayList<Habitacion> generarHabitaciones() {
         this.habitaciones = new ArrayList<Habitacion>();
         for (int i = 1; i <=15; i++) {
@@ -134,20 +136,80 @@ public class Hotel {
         }
     }
 
+    private void confirmarReserva(Reserva reserva) {
+
+
+    }
+
     //Generar reserva toma como parámetros los datos ingresados por el usuario con ellos instancia un objeto de tipo Reserva
     //que luego agrega a la lista de reservas del hotel. Finalmente imprime por consola la lista.
     private void generarReserva(String fecha,int cantidadDias, ArrayList<Huesped> huespedesRegistrados, Habitacion habitacion){
         boolean estado = true;
         Reserva reserva = new Reserva(fecha, cantidadDias, habitacion, EstadoReserva.PENDIENTE);
-        reservas.add(reserva);
 
-        System.out.println(reservas);
 
-        actualizarHabitacion(habitacion, estado,huespedesRegistrados);
-
-        System.out.println(reservas);
-
+        System.out.println(reserva);
+        String opcion = Libreria.leerStr("¿Desea confirmar la reserva? S/N");
+        if(opcion.equals("S")){
+            reserva.cambiarEstado(opcion);
+            reservas.add(reserva);
+            Comprobante comprobante = new Comprobante(reserva);
+            actualizarHabitacion(habitacion, estado,huespedesRegistrados);
+            System.out.println("Gracias por confirmar la reserva");
+            System.out.println(comprobante);
+        } else {
+            System.out.println("¿Desea regresar al menú principal? S/N");
+        }
     }
+
+    private Reserva getReservaById(int idReserva) {
+        Reserva reserva = null;
+        int i = 0;
+
+        while(i < reservas.size() && this.reservas.get(i).getIdReserva() != idReserva){
+            i++;
+        }
+
+        if(i < reservas.size()){
+            reserva = this.reservas.get(i);
+        }
+
+        return reserva;
+    }
+
+    //Este método permite remover todos los huéspedes de la lista que se le ingrese.
+    //La idea es ser utilizada para borrar los huéspedes en la habitación de la reserva cancelada.
+    private void eliminarHuespedes(ArrayList<Huesped> huespedes){
+        this.huespedes.removeAll(huespedes);
+    }
+
+    //El método cancelarReserva toma el id de la reserva que se desea cancelar
+    //Chequea que la reserva exista y si es así reconfirma el deseo de cancelación.
+    //Si se opta por continuar con la cancelación cambia el estado de reserva a Cancelada y libera la habitación.
+    //Finalmente emite un comprobante de cancelación.
+    private void cancelarReserva(int idReserva){
+        Reserva reservaACancelar = getReservaById(idReserva);
+
+        if(reservaACancelar != null) {
+            String opcion = Libreria.leerStr("¿Desea eliminar la reserva número "+ reservaACancelar.getIdReserva() + "? S/N" );
+
+            if(opcion.equals("S")){
+                ArrayList<Huesped> huespedesPorHabitacion = reservaACancelar.getHabReservada().getHuespedes();
+                eliminarHuespedes(huespedesPorHabitacion);
+                reservaACancelar.cambiarEstado("N");
+                actualizarHabitacion(reservaACancelar.getHabReservada(), false, null);
+                Comprobante comprobanteCancelacion = new Comprobante(reservaACancelar.getIdReserva());
+                System.out.println("La reserva fue exitosamente cancelada, su id de comprobante es: " + comprobanteCancelacion.getIdComprobante());
+            }
+
+        } else {
+            System.out.println("No pudo encontrarse la reserva solicitada, por favor inténtelo nuevamente.");
+        }
+    }
+
+
+
+
 
 
 
@@ -163,7 +225,7 @@ public class Hotel {
 
     }
     // por el momento el menú reserva sólo tomará los datos correspondientes del usuario para efectuar la cotización
-    // para el próximo trabajo práctico trabajaré sobre la cancelación y confirmación de la reserva.
+
     private void mostrarMenuReserva(){
         String fechaEntrada = obtenerFechaEntrada();
         int cantidadDias = obtenerCantDias();
@@ -172,6 +234,13 @@ public class Hotel {
         ArrayList<Huesped> huespedesRegistrados = registrarHuesped(cantidadHuespedes);
 
         generarReserva(fechaEntrada, cantidadDias, huespedesRegistrados, habitacion);
+    }
+
+    //Este método le solicita por pantalla al usuario que ingrese el id de la reserva a eliminar y luego
+    //llama al método cancelar reserva para hacer efectiva la cancelación.
+    private void mostrarMenuCancelacion(){
+        int idReservaACancelar = Libreria.leerInt("Por favor, ingrese el id de la reserva que desea cancelar: ");
+        cancelarReserva(idReservaACancelar);
     }
 
     //El menú principal es un método que mostrará su contenido siempre que el usuario no decida salir del mismo.
@@ -186,7 +255,7 @@ public class Hotel {
                     mostrarMenuReserva();
                     break;
                 case 2:
-                    System.out.println("Usted eligió el 2"); // sólo se coloca esta acción para comprobar que funciona correctamente
+                    mostrarMenuCancelacion();
                     break;
                 case 3:
                     verHabitacionesDisponiblesGeneral();

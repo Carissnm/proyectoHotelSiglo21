@@ -26,9 +26,50 @@ public class Reserva {
         this.costoTotal = calcularCosto(cantDias,habReservada);
     }
 
+    //Se definen los getters para poder utilizarse en el método de emitirComprobante una vez que se
+    //confirma una reserva.
+    public int getIdReserva() {
+        return idReserva;
+    }
+
+    public EstadoReserva getEstadoReserva() {
+        return estadoReserva;
+    }
+
+    public String getFechaIngreso() {
+        return fechaIngreso;
+    }
+
+    public String getFechaSalida() {
+        return fechaSalida;
+    }
+
+    public Habitacion getHabReservada() {
+        return habReservada;
+    }
+
+    public double getCostoTotal() {
+        return costoTotal;
+    }
+
     private double calcularCosto(int cantidadDias, Habitacion hab){
         return cantidadDias*hab.getTipoHabitacion().getCostoPorNoche();
     }
+
+    public void cambiarEstado(String opcion) {
+        switch(opcion) {
+            case "S":
+                estadoReserva = EstadoReserva.CONFIRMADA;
+                break;
+            case "N":
+                estadoReserva = EstadoReserva.CANCELADA;
+                break;
+            default:
+                System.out.println("Opción no disponible, por favor vuelva a intentarlo.");
+        }
+    }
+
+
 
     @Override
     public String toString() {
