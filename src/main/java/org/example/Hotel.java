@@ -83,6 +83,7 @@ public class Hotel {
     //Este método privado instancia un nuevo objeto de tipo Huésped
     //ingresando como parámetros los datos brindados por el usuario
     private Huesped ingresarHuesped(){
+        System.out.println("Ingrese los datos del huésped:");
         String nombre = Libreria.leerStr("Ingrese nombre: ");
         String apellido = Libreria.leerStr(("Ingrese apellido: "));
         String dni = Libreria.leerStr("Ingrese DNI: ");

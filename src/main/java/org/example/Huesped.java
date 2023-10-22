@@ -1,13 +1,12 @@
 package org.example;
 
-public class Huesped {
-    private String dni;
-    private String nombre;
-    private String apellido;
+//Huésped extiende de la clase abstracta Persona, por ende hereda todos sus atributos y métodos
+// en el caso de que tuviera métodos la clase padre.
+// De tener métodos entonces la clase hija estaría forzada a reescribir esos métodos de manera particular.
+public class Huesped extends Persona {
+
 
     public Huesped(String dni, String nombre, String apellido) {
-        this.dni = dni;
-        this.nombre = nombre;
-        this.apellido = apellido;
+        super(dni, nombre, apellido);
     }
 }

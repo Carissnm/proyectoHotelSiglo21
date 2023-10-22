@@ -3,8 +3,10 @@ package org.example;
 import java.util.UUID;
 
 public class Reserva {
-    private String idReserva;
+    private int idReserva;
     private String fechaIngreso;
+    private static int contador;
+
     private int cantidadDias;
     private String fechaSalida;
     private Habitacion habReservada;
@@ -14,19 +16,14 @@ public class Reserva {
     private double costoTotal;
 
     public Reserva(String fechaIngreso, int cantDias, Habitacion habReservada, EstadoReserva estadoReserva) {
-        this.idReserva = generarIdUnico();
+        contador++; // a partir del atributo estático contador cada vez que se instancia un nuevo objeto
+        //se parte del último valor de contador y se suma uno.
+        this.idReserva = contador; // el id irá entonces sumando de a uno cada vez que se instancie una nueva reserva.
         this.fechaIngreso = fechaIngreso;
         this.fechaSalida = Libreria.calcularDias(fechaIngreso, cantDias);
         this.habReservada = habReservada;
         this.estadoReserva = estadoReserva;
         this.costoTotal = calcularCosto(cantDias,habReservada);
-    }
-
-    //Este método permite generar un id único siempre que se instancie un objeto de tipo Reserva. Se lo llama dentro del
-    //propio constructor de la clase
-    private String generarIdUnico(){
-        String id = UUID.randomUUID().toString();
-        return id;
     }
 
     private double calcularCosto(int cantidadDias, Habitacion hab){
@@ -36,11 +33,10 @@ public class Reserva {
     @Override
     public String toString() {
         return "Datos de la reserva:\n" +
-                "Fecha de ingreso:\n " + fechaIngreso + '\'' +
-                "Cantidad de días de estadía: \n" + cantidadDias +
-                "Fecha de salida: \n" + fechaSalida + '\'' +
-                "Número de habitación reservada: \n" + habReservada +
-                "Costo Total: \n" + costoTotal +
-                '}';
+                "Id reserva:" + idReserva +  '\n' +
+                "Fecha de ingreso: " + fechaIngreso + '\n' +
+                "Fecha de salida: " + fechaSalida + '\n' +
+                "Número de habitación reservada: " + habReservada + "\n" +
+                "Costo Total:" + costoTotal;
     }
 }
