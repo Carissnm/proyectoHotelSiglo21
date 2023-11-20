@@ -16,6 +16,7 @@ public class Hotel {
         this.reservas = new ArrayList<Reserva>();
         this.huespedes = new ArrayList<Huesped>();
         this.habitaciones = generarHabitaciones();
+        cargarHuespedesVIP();
     }
 
     //El método generarHabitaciones nos permite armar al correr el programa
