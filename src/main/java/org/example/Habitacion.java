@@ -28,6 +28,10 @@ public class Habitacion implements Descuento {
         this.huespedes = new ArrayList<Huesped>();
     }
 
+    public double getCostoPorNoche() {
+        return costoPorNoche;
+    }
+
     public void setConDescuento(boolean conDescuento) {
         this.conDescuento = conDescuento;
     }
@@ -71,7 +75,7 @@ public class Habitacion implements Descuento {
     //se le aplicará el descuento definido por el hotel, que en este caso es del 10%.
     public void calcularDescuento() {
         if(this.conDescuento){
-            this.costoPorNoche = costoPorNoche*(1-DESCUENTO);
+            this.costoPorNoche = Math.floor(costoPorNoche*(1-DESCUENTO)*100)/100;
         }
     }
     @Override

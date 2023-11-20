@@ -5,7 +5,7 @@ package org.example;
 public class HuespedVIP extends Huesped{
     String huespedId;
     // El descuento no varía según el huésped VIP por lo tanto se declara como final
-    final double descuento = 0.2;
+    private final double descuento = 0.2;
 
     public HuespedVIP(String dni, String nombre, String apellido, String huespedId) {
         super(dni, nombre, apellido);
@@ -17,6 +17,10 @@ public class HuespedVIP extends Huesped{
 
     public String getHuespedId() {
         return huespedId;
+    }
+
+    public double getDescuento() {
+        return descuento;
     }
 
     @Override

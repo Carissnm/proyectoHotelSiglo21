@@ -114,7 +114,7 @@ public class Hotel {
             //Con un downcasting se recupera el id del huespedVIP
             HuespedVIP huespedVIP = (HuespedVIP) isHuespedVIP(dni);
             huesped = new HuespedVIP(dni,nombre,apellido, huespedVIP.getHuespedId());
-            System.out.println("Holi Vip: " + huesped.getNombre());
+
         } else {
             huesped = new Huesped(dni, nombre, apellido);
         }
@@ -141,9 +141,13 @@ public class Hotel {
     //por el usuario
     public ArrayList<Huesped> registrarHuesped(int cantidad) {
         ArrayList<Huesped> huespedesPorHab = new ArrayList<>();
+        System.out.println("Importante: Si alguno de los huéspedes es Cliente VIP, por favor ingresar sus datos primero.");
         Huesped huesped = ingresarHuesped();
 
-        if(!(huesped instanceof HuespedVIP)) this.huespedes.add(huesped);
+        if(!(huesped instanceof HuespedVIP)) {
+            this.huespedes.add(huesped);
+
+        }
         huespedesPorHab.add(huesped);
         if(cantidad > 1){
             for (int i = 1; i < cantidad; i++){
@@ -192,9 +196,16 @@ public class Hotel {
         boolean estado = true;
         Reserva reserva = new Reserva(fecha, cantidadDias, habitacion, EstadoReserva.PENDIENTE);
 
+        if(isHuespedVIP(huespedesRegistrados.get(0).getDni()) != null ){
+            HuespedVIP huespedVIP = (HuespedVIP) huespedesRegistrados.get(0);
+            reserva.setDescuento(huespedVIP.getDescuento());
+            reserva.calcularDescuento();
+        }
+
 
         System.out.println(reserva);
         String opcion = Libreria.leerStr("¿Desea confirmar la reserva? S/N");
+
         if(opcion.equals("S")){
             reserva.cambiarEstado(opcion);
             reservas.add(reserva);
@@ -202,8 +213,6 @@ public class Hotel {
             actualizarHabitacion(habitacion, estado,huespedesRegistrados);
             System.out.println("Gracias por confirmar la reserva");
             System.out.println(comprobante);
-        } else {
-            System.out.println("¿Desea regresar al menú principal? S/N");
         }
     }
 
@@ -312,6 +321,16 @@ public class Hotel {
                 default:
                     System.out.println("El valor ingresado no corresponde a una opción");
 
+            }
+
+            if(opcion != 4){
+                String op = Libreria.leerStr("¿Desea realizar otra operación? (S/N)");
+                if(op.equals("S")){
+                    opcion = mostrarMenuPrincipal();
+                } else {
+                    System.out.println("Gracias por su consulta.");
+                    continuar = false;
+                }
             }
             if(continuar) {
                 opcion = mostrarMenuPrincipal();

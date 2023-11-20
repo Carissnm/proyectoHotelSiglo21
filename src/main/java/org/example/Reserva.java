@@ -58,7 +58,7 @@ public class Reserva implements Descuento {
     }
 
     private double calcularCosto(int cantidadDias, Habitacion hab){
-        return cantidadDias*hab.getTipoHabitacion().getCostoPorNoche();
+        return Math.floor(cantidadDias*hab.getCostoPorNoche()*100)/100;
     }
 
     public void cambiarEstado(String opcion) {
@@ -78,7 +78,7 @@ public class Reserva implements Descuento {
     //aplique un descuento que está inicializado como en 0.0. Desde hotel se chequea si en la habitación hay
     //algún huésped VIP en cuyo caso se cambia el descuento al correspondiente al asignado a los huéspedes VIP.
     public void calcularDescuento() {
-        this.costoTotal = costoTotal - (1-descuento);
+        this.costoTotal = Math.floor(costoTotal * (1-descuento)*100)/100;
     }
 
 
