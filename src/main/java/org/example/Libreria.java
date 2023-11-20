@@ -1,9 +1,12 @@
 package org.example;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
@@ -47,6 +50,8 @@ public class Libreria {
     public static Date convertirFechas(String f) {
 
         Date date = null;
+        //En este caso manejamos la posible excepción de no poder realizarse el cambio de un tipo de dato a otro
+        // utilizando try-catch
         try {
             date = Libreria.fecha.parse(f);
         } catch (ParseException e) {
@@ -71,6 +76,43 @@ public class Libreria {
         String dateAfter = date.format(cal.getTime());
 
         return dateAfter;
+    }
+
+
+    //El siguiente método permite tomar un archivo (en este caso alojado en el Desktop) para obtener
+    //del mismo la lista de huéspedes considerados VIP que recibirán un descuento en la reserva.
+    public static ArrayList<Huesped> leerArchivo() throws IOException {
+        //Se crea una instancia de una lista de tipo huésped
+        ArrayList<Huesped> huespedesVIP = new ArrayList<>();
+
+        //se instancia un nuevo objeto Scanner para leer el archivo .txt con la lista de huéspedes VIP
+        Scanner scanner = new Scanner(new FileReader("C:\\Users\\carol\\Desktop\\BBDDHuespedVIP.txt")).useDelimiter(",\\s*");
+        String cadena;
+
+        while(scanner.hasNextLine()){
+            //El método trim elimina los espacios en blanco en ambos extremos de la cadena
+            cadena = scanner.nextLine().trim();
+            //El método split divide un objeto de tipo String en un Array de cadenas mediante la separación
+            //de la cadena en subcadenas de la manera cadena.split([separador][,limite])
+            String[] cadenaArray = cadena.split("\\s+");
+
+            //Se asigna los valores de cada elemento de la lista a las distintas variables necesarias
+            //para construir una nueva instancia de Huésped VIP.
+            String dni = cadenaArray[0];
+            String nombre = cadenaArray[1];
+            String apellido = cadenaArray[2];
+            String id = cadenaArray[3];
+
+            //A continuación se instancia un objeto de tipo HuespedVIP con los datos capturados en cada variable
+            Huesped huesped = new HuespedVIP(dni, nombre, apellido, id);
+
+
+            //se agrega el huésped a la lista de huéspedesVIP
+            huespedesVIP.add(huesped);
+
+        }
+
+        return huespedesVIP;
     }
 
     }

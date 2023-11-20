@@ -1,8 +1,6 @@
 package org.example;
 
-import java.util.UUID;
-
-public class Reserva {
+public class Reserva implements Descuento {
     private int idReserva;
     private String fechaIngreso;
     private static int contador;
@@ -12,6 +10,8 @@ public class Reserva {
     private Habitacion habReservada;
 
     private EstadoReserva estadoReserva;
+
+    private double descuento;
 
     private double costoTotal;
 
@@ -23,6 +23,7 @@ public class Reserva {
         this.fechaSalida = Libreria.calcularDias(fechaIngreso, cantDias);
         this.habReservada = habReservada;
         this.estadoReserva = estadoReserva;
+        this.descuento = 0.0;
         this.costoTotal = calcularCosto(cantDias,habReservada);
     }
 
@@ -30,6 +31,10 @@ public class Reserva {
     //confirma una reserva.
     public int getIdReserva() {
         return idReserva;
+    }
+
+    public void setDescuento(double descuento) {
+        this.descuento = descuento;
     }
 
     public EstadoReserva getEstadoReserva() {
@@ -69,6 +74,15 @@ public class Reserva {
         }
     }
 
+    //Gracias al Polimorfismo tomamos el método de la Interface Descuento y esta vez le indicamos que
+    //aplique un descuento que está inicializado como en 0.0. Desde hotel se chequea si en la habitación hay
+    //algún huésped VIP en cuyo caso se cambia el descuento al correspondiente al asignado a los huéspedes VIP.
+    public void calcularDescuento() {
+        this.costoTotal = costoTotal - (1-descuento);
+    }
+
+
+
 
 
     @Override
@@ -80,4 +94,6 @@ public class Reserva {
                 "Número de habitación reservada: " + habReservada + "\n" +
                 "Costo Total:" + costoTotal;
     }
+
+
 }

@@ -1,5 +1,6 @@
 package org.example;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 //La clase Hotel tiene como atributos su nombre, la lista de reservas generadas, la lista de habitaciones que possee y la lista de huéspedes
@@ -35,9 +36,26 @@ public class Hotel {
         for (int i = 1; i <=15; i++) {
             TipoHabitacion[] tipos = TipoHabitacion.values();
             Habitacion h = new Habitacion(i, tipos[generarNro()]);
+            if(h.getTipoHabitacion() == TipoHabitacion.TRIPLE){
+                h.setConDescuento(true);
+                h.calcularDescuento();
+            }
+
             habitaciones.add(h);
         }
         return habitaciones;
+    }
+
+    //Con el siguiente método se creará una lista de Huéspedes VIP para luego poder identificarlos
+    //y realizar los descuentos correspondientes a su reserva
+    public void cargarHuespedesVIP() {
+        //Se realiza un manejo de excepciones en el caso en el que surgiera algún error en la ejecución del
+        //método de leerArchivo o al agregar los huéspedes del archivo a la lista.
+        try {
+            huespedes.addAll(Libreria.leerArchivo());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //Los siguientes métodos se utilizarán en el menú de Reservas para captar lo ingresado
@@ -85,14 +103,36 @@ public class Hotel {
     //Este método privado instancia un nuevo objeto de tipo Huésped
     //ingresando como parámetros los datos brindados por el usuario
     private Huesped ingresarHuesped(){
+        Huesped huesped;
         System.out.println("Ingrese los datos del huésped:");
         String nombre = Libreria.leerStr("Ingrese nombre: ");
         String apellido = Libreria.leerStr(("Ingrese apellido: "));
         String dni = Libreria.leerStr("Ingrese DNI: ");
-
-        Huesped huesped = new Huesped(dni, nombre, apellido);
+        //Se verifica si el dni corresponde al de un huespedVip
+        if(isHuespedVIP(dni) instanceof HuespedVIP) {
+            //Con un downcasting se recupera el id del huespedVIP
+            HuespedVIP huespedVIP = (HuespedVIP) isHuespedVIP(dni);
+            huesped = new HuespedVIP(dni,nombre,apellido, huespedVIP.getHuespedId());
+            System.out.println("Holi Vip: " + huesped.getNombre());
+        } else {
+            huesped = new Huesped(dni, nombre, apellido);
+        }
 
         return huesped;
+    }
+
+    public Huesped isHuespedVIP(String dni) {
+        Huesped vip = null;
+
+        int i = 0;
+
+        while(i < huespedes.size() && !huespedes.get(i).getDni().equals(dni)) i++;
+
+        if(i < huespedes.size()){
+            if(huespedes.get(i) instanceof HuespedVIP) vip = huespedes.get(i);
+        }
+
+        return vip;
     }
 
     //Este método permite que al realizar la confirmación de la reserva
@@ -102,19 +142,23 @@ public class Hotel {
         ArrayList<Huesped> huespedesPorHab = new ArrayList<>();
         Huesped huesped = ingresarHuesped();
 
-        this.huespedes.add(huesped);
+        if(!(huesped instanceof HuespedVIP)) this.huespedes.add(huesped);
         huespedesPorHab.add(huesped);
         if(cantidad > 1){
             for (int i = 1; i < cantidad; i++){
                 huesped = ingresarHuesped();
-                this.huespedes.add(huesped);
                 huespedesPorHab.add(huesped);
+                if(!(huesped instanceof HuespedVIP)){
+                    this.huespedes.add(huesped);
+                }
             }
         }
 
         return huespedesPorHab;
 
     }
+
+
 
     /* El método actualizarHabitación es utilizado por Hotel para
     cambiar el estado de la habitación que es reservada. Para eso recorre la

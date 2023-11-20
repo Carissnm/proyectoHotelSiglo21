@@ -2,7 +2,7 @@ package org.example;
 
 import java.util.ArrayList;
 
-public class Habitacion {
+public class Habitacion implements Descuento {
     private int nroHabitacion;
     private boolean isReservada;
     //El atributo tipoHabitación es un enum dado que sólo existen un número reducido y limitado de tipos
@@ -11,6 +11,8 @@ public class Habitacion {
     private TipoHabitacion tipoHabitacion;
 
     private double costoPorNoche;
+    private boolean conDescuento;
+    private final double DESCUENTO = 0.1;
     private ArrayList<Huesped> huespedes;
 
     //Con el constructor se genera cada habitación. En el caso de huéspedes es una lista de los
@@ -22,12 +24,19 @@ public class Habitacion {
         //unitario de la habitación directo en el constructor
         this.costoPorNoche = tipoHabitacion.getCostoPorNoche();
         this.tipoHabitacion = tipoHabitacion;
+        this.conDescuento = false;
         this.huespedes = new ArrayList<Huesped>();
+    }
+
+    public void setConDescuento(boolean conDescuento) {
+        this.conDescuento = conDescuento;
     }
 
     public TipoHabitacion getTipoHabitacion() {
         return tipoHabitacion;
     }
+
+
 
     public ArrayList<Huesped> getHuespedes() {
         return huespedes;
@@ -57,6 +66,14 @@ public class Habitacion {
     }
 
 
+    //Utilizando la propiedad de Polimorfismo se toma el método calcularDescuento() de la interface Descuento
+    //y se define que en caso de que la habitación figure como con descuento al costo de la habitación por noche
+    //se le aplicará el descuento definido por el hotel, que en este caso es del 10%.
+    public void calcularDescuento() {
+        if(this.conDescuento){
+            this.costoPorNoche = costoPorNoche*(1-DESCUENTO);
+        }
+    }
     @Override
     public String toString() {
         return "Habitacion número: " +
